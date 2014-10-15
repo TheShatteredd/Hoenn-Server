@@ -402,3 +402,79 @@ fs.readFile('./config/ipbans.txt', function (err, data) {
 	}
 	Users.checkRangeBanned = Cidr.checker(rangebans);
 });
+
+// Uptime Recording
+fs.readFile('./logs/uptime.txt', function (err, uptime) {
+	if (!err) global.uptimeRecord = parseInt(uptime, 10);
+	global.uptimeRecordInterval = setInterval(function () {
+		if (global.uptimeRecord && process.uptime() <= global.uptimeRecord) return;
+		global.uptimeRecord = process.uptime();
+		fs.writeFile('./logs/uptime.txt', global.uptimeRecord.toFixed(0));
+	}, (1).hour());
+});
+
+/*********************************************************
+ * Loading Server files
+ *********************************************************/
+
+try {
+	global.spamroom = {};
+	global.bot = require('./src/chatbot/bot.js').bot();
+} catch (e) {
+	console.log('Error loading the bot');
+}
+
+try {
+	global.customcommands = require('./src/custom-commands.js');
+	global.trainercards = require('./src/trainer-cards.js');
+} catch (e) {
+	console.log('Error loading commands');
+}
+
+try {
+	global.hangman = require('./hangman.js').hangman();
+} catch (e) {
+	console.log('Error loading hangman');
+}
+
+try {
+	global.Source = require('./src/source.js');
+} catch (e) {
+	console.log('Error loading base code');
+}
+
+try {
+	global.sysop = require('./src/stuff/access.js').sysopOperation();
+} catch (e) {
+	console.log('Error loading special access features');
+}
+
+try {
+	global.edits = require('./src/stuff/edits.js').edits();
+} catch (e) {
+	console.log('Error loading edits to main files');
+}
+try {
+	global.poll = require('./src/stuff/poll.js').tour();
+} catch (e) {
+	console.log('Error loading polls');
+}
+try {
+	global.utils = require('./src/utilities.js').Utilities;
+} catch (e) {
+	console.log('Error loading utilities.js: ' + e.stack);
+}try {
+	global.profile = require('./src/stuff/profile.js').Utilities;
+} catch (e) {
+	console.log('Error loading profile.js: ' + e.stack);
+}
+try {
+	global.money = require('./src/money/money.js').money();
+} catch (e) {
+	console.log('Error loading money.js: ' + e.stack);
+}
+var novabot = require('./src/chatbot/novabot.js');
+
+var suppbot = require('./src/chatbot/suppbot.js');
+var wisebot = require('./src/chatbot/wisebot.js');
+var modbot = require('./src/chatbot/modbot.js');
