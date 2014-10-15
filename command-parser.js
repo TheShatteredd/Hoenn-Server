@@ -20,7 +20,7 @@ To reload chat commands:
 
 /hotpatch chat
 
-*/
+*/ var bot = require('./src/chatbot/bot.js').bot();
 
 const MAX_MESSAGE_LENGTH = 300;
 
